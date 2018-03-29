@@ -109,6 +109,52 @@ public class MemberDao {
 		
 	}
 	
+	/*select OneData Member */
+	public List<Member> selectOneData(String email, String pwd) throws SQLException {
+		//boolean result =false;
+		String sql = "select * FROM  member where m_Email ='"+email +"' and m_Password ='" + pwd +"'";
+		PreparedStatement ps =null;
+		ResultSet rs =null;
+		List<Member> list = new ArrayList<Member>();
+		System.out.println("sql:"+sql);
+		
+		try {
+			/*m_Idx(AI),p_Idx,m_Email,m_Phone,m_Password,m_Type,m_Status,m_NickName
+			 * */
+			ps =  conn.prepareStatement(sql);
+			
+			//ps.setString(1, member.getEmail());
+			//ps.setString(2, member.getPassword());
+			
+			System.out.println("sql:"+ps.toString());
+			
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				Member member  =new Member();
+				member.setmIdx(rs.getInt(1));
+				member.setpIdx(rs.getInt(2));
+				member.setEmail(rs.getString("m_Email"));
+				member.setMobile(rs.getString("m_Phone"));
+				member.setNickname(rs.getString("m_NickName"));
+				member.setType(rs.getString("m_Type"));
+				list.add(member);
+				
+			}
+			
+			
+			
+			
+		} catch (SQLException e) {
+			System.out.println("SQL Error: selectOneData()");
+		}finally {
+			 if(ps !=null) {		ps.close();		}
+			 if(conn != null) {	conn.close();	 }
+		}
+		
+		return list;
+		
+	}
+	
 	
 	/* Member select All */
 	public List<Member> selectAll() throws SQLException {
@@ -138,6 +184,47 @@ public class MemberDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("SQL Error: select All()");
+			
+		}finally {
+			if(rs !=null) {		rs.close();		}
+			 if(ps !=null) {		ps.close();		}
+			 if(conn != null) {	conn.close();	 }
+			 
+		}
+		
+		
+		return list;
+		
+	}
+	
+	
+	//업체 카테고리 코드 리스트 
+
+	/* Category List */
+	public List<Category> CategoryList() throws SQLException {
+		
+		String sql = "select * From category ";
+		
+		List<Category> list = new ArrayList<Category>();
+		PreparedStatement ps =null;
+		ResultSet rs =null;
+		try {
+			
+			ps = conn.prepareStatement(sql);
+			rs= ps.executeQuery();
+			while(rs.next()) {
+				Category category = new Category();
+				category.setCode(rs.getString("ct_Code"));
+				category.setDescript(rs.getString("ct_Descript"));
+				category.setUse(rs.getInt(3));
+				list.add(category);
+				
+			}
+			
+						
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("SQL Error: Catetory List()");
 			
 		}finally {
 			if(rs !=null) {		rs.close();		}

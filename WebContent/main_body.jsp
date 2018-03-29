@@ -1,0 +1,1 @@
+<div id="mainbody">	<img src="images/wedding01.jpg" width="800" ></div>

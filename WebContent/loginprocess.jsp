@@ -5,7 +5,7 @@
 <%@ page import="modal.Member" %>
 <%@ page import="modal.MemberDao" %>
 <%@ page import="java.util.regex.Pattern"%>
-
+<%@ page import ="java.util.List" %>
 
 <html>
 <head>
@@ -23,18 +23,26 @@ RequestDispatcher dispatcher;
 
 
 	Member member = new Member();
-	member.setEmail(user_email);
-	member.setPassword(user_password);
+	List<Member> list = MemberDao.getInstance().selectOneData(user_email, user_password);
 
-
-	boolean result=false;
-	if(MemberDao.getInstance().selectOne(member)){
-		session.setAttribute("EMAIL", user_email);
-		session.setAttribute("PASSWORD",user_password);
-		result = true;
-	}
-
+	String email =null;
+	String nickName =null;
+	String memberType = null;
 	
+	if(list.size() > 0){
+		email = list.get(0).getEmail();
+		nickName = list.get(0).getNickName();
+		memberType = list.get(0).getType();
+		
+		session.setAttribute("EMAIL", email);
+		session.setAttribute("NICKNAME",nickName);
+		session.setAttribute("MEMBER_TYPE", memberType);
+		
+		response.sendRedirect("index.jsp");
+	}
+		//result = true;
+
+	/*
 	if(result){
 		response.sendRedirect("success.jsp");
 	
@@ -42,10 +50,17 @@ RequestDispatcher dispatcher;
 		dispatcher = request.getRequestDispatcher("loginform.jsp");
 		dispatcher.include(request, response);
 	}
-
+*/
 
 
 %>
+<%//=list.size() %>
+<%=user_email %>
+<%= user_password%><br>
+
+<%=email %>
+<%=nickName %>
+<%= memberType%>
 
 </body>
 </html>

@@ -12,7 +12,6 @@
 
 	request.setCharacterEncoding("UTF-8");
 
-
 	String email = (String)session.getAttribute("EMAIL");
 	String password = (String)session.getAttribute("PASSWORD");
 	String nickname = (String)session.getAttribute("NICKNAME");
@@ -25,5 +24,6 @@ nickname:<%=nickname %><br>
 <%String refURL = request.getHeader("referer");%>
 <%=refURL %><br>
 <input type="button" value="처음으로" onClick="location.href='index.jsp'">
+<input type="button" value="업체등록 체크" onClick="location.href='pregform.jsp'">
 </body>
 </html>

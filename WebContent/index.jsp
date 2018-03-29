@@ -242,24 +242,41 @@ padding-right:100px;
 
 
 }
+
 #mainbody{
-width:400px;
+width:800px; margin:0 auto;
 height:400px;
 background: #AFB0B1;
-align:center;
-  
+ 
 }
+
+
 body{
 /*text-align:center;*/
 }
 </style>
+<%
+	request.setCharacterEncoding("UTF-8");
 
+	String email = (String)session.getAttribute("EMAIL");
+	String password = (String)session.getAttribute("PASSWORD");
+	String nickname = (String)session.getAttribute("NICKNAME");
+			nickname +="님! 반갑습니다.";
+%>
+<%//=nickname %>
 </head>
 <body>
 
 
 		<div id='toprightmenu' width="400px" align="right">
-			<a href='#'>로그인</a> <a href='#'>회원가입</a> <a href='#'>업체등록</a>
+			<%
+			if (email !=null && nickname !=null){
+			%>
+				<%=nickname%> <a href='logout.jsp'>로그아웃</a> 
+			<%}else{ %>
+				<a href='loginform.jsp'>로그인</a> <a href='regform.jsp'>회원가입</a> 
+			<%} %>
+			<a href='pregform.jsp'>업체등록</a>
 		</div>
 			
 	
@@ -314,6 +331,6 @@ body{
 			</ul>
 		</div>
 		
-		<div id="mainbody">	body</div>
+		 <%@ include file="main_body.jsp" %>
 </body>
 </html>
