@@ -24,16 +24,19 @@ RequestDispatcher dispatcher;
 
 	Member member = new Member();
 	List<Member> list = MemberDao.getInstance().selectOneData(user_email, user_password);
-
+	
+	int m_idx=0;
 	String email =null;
 	String nickName =null;
 	String memberType = null;
 	
 	if(list.size() > 0){
+		m_idx = list.get(0).getmIdx();
 		email = list.get(0).getEmail();
 		nickName = list.get(0).getNickName();
 		memberType = list.get(0).getType();
 		
+		session.setAttribute("M_IDX", m_idx);
 		session.setAttribute("EMAIL", email);
 		session.setAttribute("NICKNAME",nickName);
 		session.setAttribute("MEMBER_TYPE", memberType);
@@ -54,7 +57,8 @@ RequestDispatcher dispatcher;
 
 
 %>
-<%//=list.size() %>
+<%=list.size() %>
+<%=m_idx %>
 <%=user_email %>
 <%= user_password%><br>
 

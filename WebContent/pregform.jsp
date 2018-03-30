@@ -392,7 +392,7 @@ span.select{
 	String email = (String)session.getAttribute("EMAIL");
 	String nickname = (String)session.getAttribute("NICKNAME");
 
-	member_type ="2";
+	//member_type ="2";//디버깅후 주석처리.
 	
 if(member_type ==null){
 	//out.println("로그인하세요");
@@ -435,32 +435,39 @@ if(member_type ==null){
 			        <div class="content">
 				            <div class="signin-cont cont">
 					                <form action="pregprocess.jsp" method="post" >
-						                    <input type="text" name="PNAME" id="pname" class="inpt" required="required" placeholder="업체명">
+						                    <input type="text" name="P_NAME" id="pname" class="inpt" required="required" placeholder="업체명">
 						                    <label for="email">업체명</label>
 						                    
-						                    <input type="password" name="PASSWORD" id="password" class="inpt" required="required" placeholder="비밀번호">
-                						    <label for="password">Your password</label>
+						                    <input type="password" name="P_PHONE" id="password" class="inpt" required="required" placeholder="전화번호">
+                						    <label for="password">전화번호</label>
                 						    
-						                    <input type="password" name="PASSWORD2" id="password2" class="inpt" required="required" placeholder="비밀번호 확인">
-                						    <label for="password2">Your password</label>
-                						    
-                							<input type="text" name="MOBILE" id="phone" class="inpt" required="required" placeholder="핸드폰">
-                						    <label for="MOBILE">Your phone</label>
-                						                    						    
-                						    <input type="text" name="NICKNAME" id="nickname" class="inpt" required="required" placeholder="별명">
-                						    <label for="nickname">Your nick name</label>
-                						    
-                					           						   
+						                    <input type="password" name="P_ADDRESS" id="password2" class="inpt" required="required" placeholder="주소">
+                						    <label for="password2">주소</label>
+
+ 											<input type="text" name="P_PRICE" id="nickname" class="inpt" required="required" placeholder="가격">
+                						    <label for="nickname">가격</label>
+
+                 						    
+                						     <div class="variation2">
+									            <span>운영방식 </span>
+									            <select class="select" name="P_OPERATION">
+									                <option value="100">개인</option>
+									                <option value="200" selected >기업</option>
+									                <option value="300">재능기부</option>
+									               
+									            </select>
+									        </div>
+									        <br>
+
                 						   <%
                 							
-                						    //Category category = new Category();
-                							List<Category> list = MemberDao.getInstance().CategoryList();
+                						   	List<Category> list = MemberDao.getInstance().CategoryList();
 
                 						   %>
                 						    <div class="variation2">
 									            <span>업체종류</span>
-									            <select class="select" name="PTYPE">
-									                <%
+									            <select class="select" name="P_CATEGORY">
+									               <%
 									                for(int i=0; i < list.size(); i++){
 									                %>
 									               	<option value="<%=list.get(i).getCode() %>"><%=list.get(i).getDescript() %></option>
@@ -469,6 +476,8 @@ if(member_type ==null){
 									        </div>
         
                 						   <br>
+                						    <textarea class="inpt" rows="7" cols="38" name="P_INTRODUCE" class="inpt" maxlength="200" required="required" placeholder="소개글"></textarea>
+                						                 						    
                 						    
 						                    <input type="checkbox" id="remember" class="checkbox" checked>
 						                    <label for="remember">Remember me</label>

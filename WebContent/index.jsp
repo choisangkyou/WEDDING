@@ -258,6 +258,10 @@ body{
 <%
 	request.setCharacterEncoding("UTF-8");
 
+	//업체
+	String p_category = (String)session.getAttribute("P_CATEGORY"); //업체구분 ->pidx 대체
+
+	//회원 
 	String email = (String)session.getAttribute("EMAIL");
 	String password = (String)session.getAttribute("PASSWORD");
 	String nickname = (String)session.getAttribute("NICKNAME");
@@ -276,7 +280,12 @@ body{
 			<%}else{ %>
 				<a href='loginform.jsp'>로그인</a> <a href='regform.jsp'>회원가입</a> 
 			<%} %>
-			<a href='pregform.jsp'>업체등록</a>
+			
+			<%if (p_category !=null) {%>
+				*Partner
+			<%}else{%>
+				<a href='pregform.jsp'>업체등록</a>
+			<%} %>
 		</div>
 			
 	

@@ -75,6 +75,50 @@ public class MemberDao {
 	}
 	
 	
+	/*insert Partner */
+	public boolean insertPartner(Partner partner) throws SQLException {
+		boolean result =false;
+		String sql_append = "insert into partner  (m_Idx,p_Name,p_Category,m_Phone,p_Address,p_Introduce,p_Operation,p_Price,p_Photo1) ";
+			   sql_append += "	 values(?,?,?,?,?,?,?,?,?)";
+		PreparedStatement ps =null;
+		ResultSet rs=null;
+		try {
+			/*m_Idx(AI),p_Idx,m_Email,m_Phone,m_Password,m_Type,m_Status,m_NickName
+			 * */
+			ps =  conn.prepareStatement(sql_append);
+			
+			ps.setInt(1,partner.getM_Idx());
+			ps.setString(2, partner.getName());
+			ps.setString(3, partner.getCategory());
+			ps.setString(4, partner.getPhone());
+			ps.setString(5, partner.getAddress());
+			ps.setString(6, partner.getIntroduce());
+			ps.setString(7,partner.getOperation());
+			ps.setInt(8, partner.getPrice());
+			ps.setString(9,partner.getPhoto1());
+			
+			
+			//System.out.println("sql:"+ps.toString());
+			
+			int row = ps.executeUpdate();
+			//int lastID = LAST_INSERT_ID();
+			if(row>0) {
+				result = true;
+				//System.out.println("등록 되었습니다.");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("SQL Error: insertPartner()");
+		}finally {
+			 if(ps !=null) {		ps.close();		}
+			 if(conn != null) {	conn.close();	 }
+		}
+		
+		return result;
+		
+	}
+	
+	
 	/*select One Member */
 	public boolean selectOne(Member member) throws SQLException {
 		boolean result =false;
