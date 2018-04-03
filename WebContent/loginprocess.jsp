@@ -36,10 +36,13 @@ RequestDispatcher dispatcher;
 		nickName = list.get(0).getNickName();
 		memberType = list.get(0).getType();
 		
-		session.setAttribute("M_IDX", m_idx);
+		session.setAttribute("M_IDX", Integer.toString(m_idx));
 		session.setAttribute("EMAIL", email);
 		session.setAttribute("NICKNAME",nickName);
 		session.setAttribute("MEMBER_TYPE", memberType);
+		
+		response.sendRedirect("index.jsp");
+	}else{
 		
 		response.sendRedirect("index.jsp");
 	}

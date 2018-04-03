@@ -15,7 +15,9 @@ public class MemberDao {
 	private  Connection conn;
 	
 	String driverName ="com.mysql.jdbc.Driver";
-	String url ="jdbc:mysql://localhost:3306/wowwedding";
+	//String url ="jdbc:mysql://localhost:3306/wowwedding";
+	String url = "jdbc:mysql://127.0.0.1:3306/wowwedding?useSSL=true&verifyServerCertificate=false";//SSL 에러발생시..
+	
 	String user="root";
 	String password ="0000";
 	
@@ -78,8 +80,16 @@ public class MemberDao {
 	/*insert Partner */
 	public boolean insertPartner(Partner partner) throws SQLException {
 		boolean result =false;
-		String sql_append = "insert into partner  (m_Idx,p_Name,p_Category,m_Phone,p_Address,p_Introduce,p_Operation,p_Price,p_Photo1) ";
-			   sql_append += "	 values(?,?,?,?,?,?,?,?,?)";
+		String sql_append = "insert into partner  (m_Idx,p_Name,p_Category,m_Phone,p_Address,p_Introduce,p_Operation,p_Price,p_Photo1)  values(?,?,?,?,?,?,?,?,?) ";
+
+			  /* sql_append += " update member ";
+			   sql_append += " set p_idx = LAST_INSERT_ID()";  
+			   sql_append += " where m_idx = ?";
+			   	*/					
+			
+			   
+			   System.out.println("sql:"+sql_append);
+				
 		PreparedStatement ps =null;
 		ResultSet rs=null;
 		try {
@@ -96,18 +106,20 @@ public class MemberDao {
 			ps.setString(7,partner.getOperation());
 			ps.setInt(8, partner.getPrice());
 			ps.setString(9,partner.getPhoto1());
+			//ps.setInt(11,partner.getM_Idx());
 			
-			
-			//System.out.println("sql:"+ps.toString());
 			
 			int row = ps.executeUpdate();
-			//int lastID = LAST_INSERT_ID();
+			System.out.println("ROW:"+row +"sql:"+ps.toString());
+			
+			//LAST_INSERT_ID();
 			if(row>0) {
 				result = true;
 				//System.out.println("등록 되었습니다.");
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("SQL Error: insertPartner()");
 		}finally {
 			 if(ps !=null) {		ps.close();		}
@@ -186,13 +198,16 @@ public class MemberDao {
 			}
 			
 			
-			
-			
 		} catch (SQLException e) {
 			System.out.println("SQL Error: selectOneData()");
 		}finally {
-			 if(ps !=null) {		ps.close();		}
-			 if(conn != null) {	conn.close();	 }
+			 if(ps !=null)
+				 ps.close();
+			if(rs !=null) 
+				rs.close();
+			
+			 if(conn != null) 
+				 conn.close();	 
 		}
 		
 		return list;
@@ -271,9 +286,12 @@ public class MemberDao {
 			System.out.println("SQL Error: Catetory List()");
 			
 		}finally {
-			if(rs !=null) {		rs.close();		}
-			 if(ps !=null) {		ps.close();		}
-			 if(conn != null) {	conn.close();	 }
+			 if(ps != null)
+			        ps.close();
+			    if(rs != null)
+			        rs.close();
+			    if(conn != null)
+			        conn.close();
 			 
 		}
 		

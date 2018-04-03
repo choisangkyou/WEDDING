@@ -387,7 +387,7 @@ span.select{
 </head>
 <body>
 <%
-
+	String m_idx = (String)session.getAttribute("M_IDX");
 	String member_type = (String) session.getAttribute("MEMBER_TYPE");
 	String email = (String)session.getAttribute("EMAIL");
 	String nickname = (String)session.getAttribute("NICKNAME");
@@ -423,7 +423,7 @@ if(member_type ==null){
 }
 
 %>
-<%//=member_type.toString() %>
+<%=m_idx%>
 <section class="container">
 		    <article class="half">
 			        <h1>업체 등록</h1>
@@ -435,13 +435,14 @@ if(member_type ==null){
 			        <div class="content">
 				            <div class="signin-cont cont">
 					                <form action="pregprocess.jsp" method="post" >
+					                 		<input type="hidden" name="M_IDX" id="pname" value=<%=m_idx%>>
 						                    <input type="text" name="P_NAME" id="pname" class="inpt" required="required" placeholder="업체명">
 						                    <label for="email">업체명</label>
 						                    
-						                    <input type="password" name="P_PHONE" id="password" class="inpt" required="required" placeholder="전화번호">
+						                    <input type="text" name="P_PHONE" id="password" class="inpt" required="required" placeholder="전화번호">
                 						    <label for="password">전화번호</label>
                 						    
-						                    <input type="password" name="P_ADDRESS" id="password2" class="inpt" required="required" placeholder="주소">
+						                    <input type="text" name="P_ADDRESS" id="password2" class="inpt" required="required" placeholder="주소">
                 						    <label for="password2">주소</label>
 
  											<input type="text" name="P_PRICE" id="nickname" class="inpt" required="required" placeholder="가격">
@@ -478,6 +479,7 @@ if(member_type ==null){
                 						   <br>
                 						    <textarea class="inpt" rows="7" cols="38" name="P_INTRODUCE" class="inpt" maxlength="200" required="required" placeholder="소개글"></textarea>
                 						                 						    
+                						    <input type="hidden" name="P_PHOTO1" id="p_photo1" class="inpt" value="filepath.jpg">
                 						    
 						                    <input type="checkbox" id="remember" class="checkbox" checked>
 						                    <label for="remember">Remember me</label>
