@@ -267,7 +267,7 @@ body{
 	String nickname = (String)session.getAttribute("NICKNAME");
 			nickname +="님! 반갑습니다.";
 %>
-<%//=nickname %>
+<%//=p_category %>
 </head>
 <body>
 
@@ -276,7 +276,7 @@ body{
 			<%
 			if (email !=null && nickname !=null){
 			%>
-				<%=nickname%> <a href='logout.jsp'>로그아웃</a> 
+				<%=nickname%> <a href='logout.jsp'>로그아웃</a> <a href='modifyform.jsp'>정보수정</a> 
 			<%}else{ %>
 				<a href='loginform.jsp'>로그인</a> <a href='regform.jsp'>회원가입</a> 
 			<%} %>
@@ -304,8 +304,8 @@ body{
 					<a href='#'>업체</a>
 					<ul>
 						<li class='sub'>
-							<a href='#'>장소</a>
-							<ul>
+							<a href='index.jsp?cate=001'>장소</a>
+							<!-- <ul>
 								<li>
 									<a href='#'>place1</a>
 								</li>
@@ -313,18 +313,11 @@ body{
 									<a href='#'>place2</a>
 								</li>
 							</ul>
+							-->
 						</li>
-						<li class='sub'>
-							<a href='#'>포토</a>
-							<ul>
-								<li>
-									<a href='#'>photo1</a>
-								</li>
-								<li class='last'>
-									<a href='#'>photo1</a>
-								</li>
-							</ul>
-						</li>
+						<li class='sub'><a href='index.jsp?cate=002'>포토</a></li>
+						<li class='sub'><a href='index.jsp?cate=003'>드레스</a></li>
+							
 					</ul>
 				</li>
 				
@@ -339,7 +332,32 @@ body{
 
 			</ul>
 		</div>
+		<%
+		/*
+		'001', '장소', '1'
+		'002', '포토', '1'
+		'003', '드레스', '1'
+		'004', '신랑예복', '1'
+		'005', '메이크업', '1'
+		'006', '한복', '1'
+		'007', '사회', '1'
+		'008', '코디', '1'
+
+		*/
 		
-		 <%@ include file="main_body.jsp" %>
+		String cate = request.getParameter("cate"); //카테고리 구분값.
+		
+		
+		%>
+		
+		<%if(cate == null){%>
+			 <%@ include file="main_body.jsp" %>
+		<%}else{ %>
+			<jsp:include page="partner.jsp" flush="false"> 
+	  			<jsp:param name="cate" value="<%=cate %>"/>
+	  		</jsp:include>
+	  		
+		 	
+		<%} %>
 </body>
 </html>

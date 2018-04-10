@@ -10,6 +10,7 @@ P_OPERATION
 P_CATEGORY
 P_INTRODUCE
 	 */
+	private int p_Idx; //¾÷Ã¼ index
 	private int m_Idx; //¸É¹ö index
 	private String name;
 	private String phone;
@@ -23,6 +24,12 @@ P_INTRODUCE
 	private String photo3;
 	private String photo4;
 	
+	public int getP_Idx() {
+		return p_Idx;
+	}
+	public void setP_Idx(int p_Idx) {
+		this.p_Idx = p_Idx;
+	}
 	public int getM_Idx() {
 		return m_Idx;
 	}

@@ -54,7 +54,7 @@ String p_photo1 = request.getParameter("P_PHOTO1");
 	boolean result=false;
 	if(MemberDao.getInstance().insertPartner(partner)){
 		out.println("========= OK =========");
-		session.setAttribute("P_CATEGORY", p_category);
+		//session.setAttribute("P_CATEGORY", p_category);
 		result = true;
 	}
 

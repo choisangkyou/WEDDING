@@ -39,6 +39,47 @@ public class MemberDao {
 		}
 	}
 	
+	/*modify Member */
+	public boolean modifyMember(Member member) throws SQLException {
+		boolean result =false;
+		String sql = "update member ";
+			   sql += " set m_Email= ? ,m_Phone =? ,m_Password =?,m_Type = ?,m_NickName =? , m_Type=?";
+			   sql += "	where m_idx=?";
+		PreparedStatement ps =null;
+		
+		try {
+			/*m_Idx(AI),p_Idx,m_Email,m_Phone,m_Password,m_Type,m_Status,m_NickName
+			 * */
+			ps =  conn.prepareStatement(sql);
+			
+			ps.setString(1, member.getEmail());
+			ps.setString(2, member.getMobile());
+			ps.setString(3, member.getPassword());
+			ps.setString(4, member.getType());
+			ps.setString(5, member.getNickName());
+			ps.setString(6, member.getType());
+			ps.setInt(7, member.getmIdx());
+			
+			System.out.println("sql:"+ps.toString());
+			
+			int row = ps.executeUpdate();
+			if(row>0) {
+				result = true;
+				//System.out.println("등록 되었습니다.");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("SQL Error: ModifyMember()");
+		}finally {
+			 if(ps !=null) {		ps.close();		}
+			// if(conn != null) {	conn.close();	 }
+		}
+		
+		return result;
+		
+	}
+	
+	
 	/*insert Member */
 	public boolean insertMember(Member member) throws SQLException {
 		boolean result =false;
@@ -80,15 +121,11 @@ public class MemberDao {
 	/*insert Partner */
 	public boolean insertPartner(Partner partner) throws SQLException {
 		boolean result =false;
-		String sql_append = "insert into partner  (m_Idx,p_Name,p_Category,m_Phone,p_Address,p_Introduce,p_Operation,p_Price,p_Photo1)  values(?,?,?,?,?,?,?,?,?) ";
+		String sql_append = "insert into partner  (m_Idx,p_Name,p_Category,p_Phone,p_Address,p_Introduce,p_Operation,p_Price,p_Photo1)";
+				sql_append += " values(?,?,?,?,?,?,?,?,?) ";
 
-			  /* sql_append += " update member ";
-			   sql_append += " set p_idx = LAST_INSERT_ID()";  
-			   sql_append += " where m_idx = ?";
-			   	*/					
-			
-			   
-			   System.out.println("sql:"+sql_append);
+		
+		// System.out.println("sql:"+sql_append);
 				
 		PreparedStatement ps =null;
 		ResultSet rs=null;
@@ -96,8 +133,8 @@ public class MemberDao {
 			/*m_Idx(AI),p_Idx,m_Email,m_Phone,m_Password,m_Type,m_Status,m_NickName
 			 * */
 			ps =  conn.prepareStatement(sql_append);
-			
-			ps.setInt(1,partner.getM_Idx());
+			int m_idx = partner.getM_Idx();
+			ps.setInt(1,m_idx);
 			ps.setString(2, partner.getName());
 			ps.setString(3, partner.getCategory());
 			ps.setString(4, partner.getPhone());
@@ -110,12 +147,16 @@ public class MemberDao {
 			
 			
 			int row = ps.executeUpdate();
-			System.out.println("ROW:"+row +"sql:"+ps.toString());
+		
 			
-			//LAST_INSERT_ID();
+			System.out.println("ROW:"+row +"sql:"+ps.toString());
+
 			if(row>0) {
 				result = true;
-				//System.out.println("등록 되었습니다.");
+				boolean up = MemberOneUpdate(m_idx);
+				if(up) {
+					System.out.println("up success");
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -123,7 +164,47 @@ public class MemberDao {
 			System.out.println("SQL Error: insertPartner()");
 		}finally {
 			 if(ps !=null) {		ps.close();		}
-			 if(conn != null) {	conn.close();	 }
+			// if(conn != null) {	conn.close();	 }
+		}
+		
+		return result;
+		
+	}
+	
+	// member p_idx 업데이트 
+
+	public boolean MemberOneUpdate(int midx) throws SQLException {
+		boolean result =false;
+		String  sql_append = " update member ";
+			   sql_append += " set p_idx = LAST_INSERT_ID()";  
+			   sql_append += " where m_idx = ?";
+
+			   System.out.println("sql:"+sql_append);
+				
+		PreparedStatement ps =null;
+		ResultSet rs=null;
+		
+		try {
+			
+			ps =  conn.prepareStatement(sql_append);
+			
+			ps.setInt(1,midx);
+		
+			int row = ps.executeUpdate();
+			System.out.println("ROW:"+row +"sql:"+ps.toString());
+			
+			if(row>0) {
+				result = true;
+				
+				System.out.println("업데이트 되었습니다.");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("SQL Error: MemberOneUpdate()");
+		}finally {
+			 if(ps !=null) {		ps.close();		}
+			// if(conn != null) {	conn.close();	 }
 		}
 		
 		return result;
@@ -158,7 +239,7 @@ public class MemberDao {
 			System.out.println("SQL Error: selectOne()");
 		}finally {
 			 if(ps !=null) {		ps.close();		}
-			 if(conn != null) {	conn.close();	 }
+			 //if(conn != null) {	conn.close();	 }
 		}
 		
 		return result;
@@ -193,6 +274,7 @@ public class MemberDao {
 				member.setMobile(rs.getString("m_Phone"));
 				member.setNickname(rs.getString("m_NickName"));
 				member.setType(rs.getString("m_Type"));
+				member.setPassword(rs.getString("m_Password"));
 				list.add(member);
 				
 			}
@@ -206,8 +288,7 @@ public class MemberDao {
 			if(rs !=null) 
 				rs.close();
 			
-			 if(conn != null) 
-				 conn.close();	 
+			 //if(conn != null)  conn.close();	 
 		}
 		
 		return list;
@@ -247,7 +328,7 @@ public class MemberDao {
 		}finally {
 			if(rs !=null) {		rs.close();		}
 			 if(ps !=null) {		ps.close();		}
-			 if(conn != null) {	conn.close();	 }
+			// if(conn != null) {	conn.close();	 }
 			 
 		}
 		
@@ -290,11 +371,58 @@ public class MemberDao {
 			        ps.close();
 			    if(rs != null)
 			        rs.close();
-			    if(conn != null)
-			        conn.close();
+			   // if(conn != null)    conn.close();
 			 
 		}
 		
+		
+		return list;
+		
+	}
+	
+	
+	//업체 리스트 
+
+	public List<Partner> PartnerAll(String category) throws SQLException {
+		//boolean result =false;
+		String sql = "select * FROM  partner where p_Category =?" ;
+		PreparedStatement ps =null;
+		ResultSet rs =null;
+		List<Partner> list = new ArrayList<Partner>();
+		System.out.println("sql:"+sql);
+		
+		try {
+			ps =  conn.prepareStatement(sql);
+			ps.setString(1, category);
+		
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				Partner partner  =new Partner();
+				partner.setP_Idx(rs.getInt(1));
+				partner.setM_Idx(rs.getInt(2));
+				partner.setName(rs.getString("p_Name"));
+				partner.setPhone(rs.getString("p_Phone"));
+				partner.setAddress(rs.getString("p_Address"));
+				partner.setIntroduce(rs.getString("p_Introduce"));
+				partner.setOperation(rs.getString("p_Operation"));
+				partner.setPrice(rs.getInt("p_Price"));
+				partner.setPhoto1(rs.getString("p_Photo1"));
+				list.add(partner);
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("SQL Error: PartnerAll()");
+		}finally {
+			 if(ps !=null)
+				 ps.close();
+			if(rs !=null) 
+				rs.close();
+			
+			 //if(conn != null)  conn.close();	 
+		}
 		
 		return list;
 		
