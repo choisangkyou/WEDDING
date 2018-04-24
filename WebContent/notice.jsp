@@ -1,7 +1,7 @@
 
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
-<%@ page import="modal.Partner" %>
+<%@ page import="modal.Notice" %>
 <%@ page import="modal.MemberDao" %>
 <%@ page import ="java.util.List" %>  
 
@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>와우 웨딩</title>
+<title>공지사항</title>
 
 
 <style type="text/css">
@@ -142,46 +142,39 @@ table tr:hover td{
 %>
 <%
 String cate = request.getParameter("cate"); //카테고리 구분값.
+String email = (String)session.getAttribute("EMAIL");
 
-Partner partner = new Partner();
-List<Partner> list = MemberDao.getInstance().PartnerAll(cate);
+List<Notice> notice = MemberDao.getInstance().NoticeAll();
 
 %>
 <%=cate%>
-<%//=list.size() %>
-<form action="resv_process.jsp" method="POST">
+<%=notice.size() %>
+
+<form action ="replyform.jsp" method="POST">
 <table cellspacing='0'>
 	<tr>
-		<th>업체명</th>
-		<th>전화번호</th>
-		<th>소개</th>
-		<th>가격</th>
-		<th>예약(서비스일자)</th>
+		<th>index</th>
+		<th>날짜</th>
+		<th>내용</th>
+		<th>글쓴이</th>
+		<th>댓글</th>
+
 	</tr>
-    <%if (list.size()>0){ 
-    	for(int i =0; i<list.size(); i++){%>
+    <%if (notice.size() > 0){ 
+    	for(int i =0; i<notice.size(); i++){%>
 	<tr>
-		<td><%=list.get(i).getName() %></td>
-		<td><%=list.get(i).getPhone() %></td>
-		<td><img src="images/<%=list.get(i).getPhoto1()%>" width="400"/><br><%=list.get(i).getIntroduce() %></td>
-		<td><%=list.get(i).getPrice() %></td>
-		<td width="100">
-		※서비스 받고자하는 날짜를 아래 처럼 입력하세요.<br>
-		예)2018-04-12 14:00 <br><br><input type="text" name="r_servicedate"/><br><br>
-		
-		  <input type="hidden" name="pidx" value="<%=list.get(i).getP_Idx()%>">
-		  <input type="hidden" name="midx" value="<%=list.get(i).getM_Idx()%>">
-		 <input type="submit" value="예약하기" class="submit">
+		<td><%=notice.get(i).getN_idx()%></td>
+		<td><%=notice.get(i).getN_date()%></td>
+		<td><%=notice.get(i).getN_notice()%></td>
+		<td><%=notice.get(i).getN_writer()%></td>
+		<td>
+		 <input type="hidden" name="idx" value="<%=notice.get(i).getN_idx()%>">
+		 <input type="hidden" name="writer" value="<%=email%>">
+		<input type="submit"  value="댓글" class="submit"></td>	
 	</tr>
 	<%	}
     } %>
-	<!-- <tr class='even'>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
-	-->
-
+	
 	
 </table>
 </form>

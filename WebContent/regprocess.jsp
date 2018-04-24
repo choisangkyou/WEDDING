@@ -50,7 +50,7 @@ String user_type = request.getParameter("TYPE");
 
 	
 	if(result){
-		response.sendRedirect("success.jsp");
+		response.sendRedirect("index.jsp");
 	//dispatcher = request.getRequestDispatcher("joinForm.jsp");
 	//dispatcher.include(request, response);
 	}

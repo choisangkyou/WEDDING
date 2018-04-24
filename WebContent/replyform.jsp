@@ -1,7 +1,7 @@
 
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
-<%@ page import="modal.Partner" %>
+<%@ page import="modal.Notice" %>
 <%@ page import="modal.MemberDao" %>
 <%@ page import ="java.util.List" %>  
 
@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>와우 웨딩</title>
+<title>공지사항</title>
 
 
 <style type="text/css">
@@ -141,50 +141,53 @@ table tr:hover td{
 //String cate = request.getParameter("cate"); //카테고리 구분값.
 %>
 <%
-String cate = request.getParameter("cate"); //카테고리 구분값.
+String cate = request.getParameter("cate");
+String idx = request.getParameter("idx"); 
+String writer = request.getParameter("writer");
 
-Partner partner = new Partner();
-List<Partner> list = MemberDao.getInstance().PartnerAll(cate);
+Notice notice = new Notice();
+List<Notice> list = MemberDao.getInstance().NoticeAll();
+
 
 %>
-<%=cate%>
-<%//=list.size() %>
-<form action="resv_process.jsp" method="POST">
+
+<%=list.size() %>
+<%=idx%>
+<%=writer%><!-- 로그인 체크 -->
+
 <table cellspacing='0'>
 	<tr>
-		<th>업체명</th>
-		<th>전화번호</th>
-		<th>소개</th>
-		<th>가격</th>
-		<th>예약(서비스일자)</th>
+		<th>index</th>
+		<th>날짜</th>
+		<th>내용</th>
+		<th>글쓴이</th>
+
 	</tr>
-    <%if (list.size()>0){ 
-    	for(int i =0; i<list.size(); i++){%>
+    <%if (list.size() > 0){ %>
 	<tr>
-		<td><%=list.get(i).getName() %></td>
-		<td><%=list.get(i).getPhone() %></td>
-		<td><img src="images/<%=list.get(i).getPhoto1()%>" width="400"/><br><%=list.get(i).getIntroduce() %></td>
-		<td><%=list.get(i).getPrice() %></td>
-		<td width="100">
-		※서비스 받고자하는 날짜를 아래 처럼 입력하세요.<br>
-		예)2018-04-12 14:00 <br><br><input type="text" name="r_servicedate"/><br><br>
+		<td><%=list.get(0).getN_idx()%></td>
+		<td><%=list.get(0).getN_date()%></td>
+		<td><%=list.get(0).getN_notice() %></td>
+		<td><%=list.get(0).getN_writer() %></td>
+				
+	</tr>
+	<%} %>
+	<form action="appendreply.jsp" mehtod="POST">
+	<tr>
+		<td colspan="4" >
+		<input type=text name="reply" value=""  size="60">
+		<input type=hidden name="n_idx" value="<%=list.get(0).getN_idx()%>"  size="60">
+		<input type=hidden name="n_writer" value="<%=writer %>"  size="60">
 		
-		  <input type="hidden" name="pidx" value="<%=list.get(i).getP_Idx()%>">
-		  <input type="hidden" name="midx" value="<%=list.get(i).getM_Idx()%>">
-		 <input type="submit" value="예약하기" class="submit">
+			<input type="submit"   value="입력" class="submit">
+			<!-- onClick="location.href='appendreply.jsp?n_idx=<%=list.get(0).getN_idx()%>&n_writer=<%=writer %>'" -->
+		</td>		
 	</tr>
-	<%	}
-    } %>
-	<!-- <tr class='even'>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
-	-->
+	</form>
 
 	
 </table>
-</form>
+
 
 </body>
 </html>

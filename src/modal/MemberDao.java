@@ -5,12 +5,22 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
+
 import java.util.List;
 
 
 
 public class MemberDao {
+	/*long time = System.currentTimeMillis(); 
+
+	SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+
+	String str = dayTime.format(new Date(time));
+*/
+	
 	private static MemberDao instance;
 	private  Connection conn;
 	
@@ -170,6 +180,61 @@ public class MemberDao {
 		return result;
 		
 	}
+	
+	/*insert Reservation */
+	public boolean insertReservation(Reservation resv) throws SQLException {
+		/*
+	 SELECT `reservation`.`r_Idx`,
+    `reservation`.`m_Idx`,
+    `reservation`.`p_Idx`,
+    `reservation`.`r_Date`,
+    `reservation`.`r_ServiceDate`,
+    `reservation`.`r_Confirm`,
+    `reservation`.`r_Price`,
+    `reservation`.`r_Status`
+FROM `wowwedding`.`reservation`;
+	 */
+		boolean result =false;
+		String sql_append = "insert into reservation (m_Idx,p_Idx,r_Date,r_ServiceDate,r_Price)";
+				sql_append += " values(?,?,?,?,?) ";
+
+		
+		 System.out.println("sql:"+sql_append);
+				
+		PreparedStatement ps =null;
+		ResultSet rs=null;
+		try {
+			
+			ps =  conn.prepareStatement(sql_append);
+			
+			ps.setInt(1,resv.getM_Idx());
+			ps.setInt(2, resv.getP_Idx());
+			ps.setString(3, resv.getR_Date());
+			ps.setString(4, resv.getR_ServiceDate());
+			ps.setInt(5, resv.getR_Price());
+			
+			int row = ps.executeUpdate();
+		
+			
+			//System.out.println("ROW:"+row +"sql:"+ps.toString());
+
+			if(row>0) {
+				result = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("SQL Error: insert Reservation()");
+		}finally {
+			 if(ps !=null) {		ps.close();		}
+			// if(conn != null) {	conn.close();	 }
+		}
+		
+		return result;
+		
+	}
+	
+	
 	
 	// member p_idx 업데이트 
 
@@ -380,6 +445,182 @@ public class MemberDao {
 		
 	}
 	
+	/* Reply select All */
+	public List<Reply> ReplyAll(int p_idx) throws SQLException {
+		
+		String sql = "select * From reply where p_idx =? ";
+		
+		List<Reply> list = new ArrayList<Reply>();
+		PreparedStatement ps =null;
+		ResultSet rs =null;
+		try {
+			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, p_idx);
+			rs= ps.executeQuery();
+			while(rs.next()) {
+				Reply reply = new Reply();
+				reply.setP_idx(rs.getInt("p_idx"));
+				reply.setR_idx(rs.getInt("r_idx"));
+				reply.setR_date(rs.getString("r_date"));
+				reply.setR_writer(rs.getString("r_writer"));
+				reply.setR_memo(rs.getString("r_memo"));
+				
+				list.add(reply);
+				
+			}
+			
+						
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("SQL Error: Reply All()");
+			
+		}finally {
+			if(rs !=null) {		rs.close();		}
+			 if(ps !=null) {		ps.close();		}
+			// if(conn != null) {	conn.close();	 }
+			 
+		}
+		
+		
+		return list;
+		
+	}
+	
+	
+
+	/*게시글 댓글 입력 */
+	public boolean insertReply(Reply reply) throws SQLException {
+		boolean result =false;
+		String sql_append = "insert into reply  (p_idx,r_date,r_writer,r_memo)";
+				sql_append += " values(?,?,?,?) ";
+
+		
+		// System.out.println("sql:"+sql_append);
+				
+		PreparedStatement ps =null;
+		ResultSet rs=null;
+		try {
+			/*m_Idx(AI),p_Idx,m_Email,m_Phone,m_Password,m_Type,m_Status,m_NickName
+			 * */
+			ps =  conn.prepareStatement(sql_append);
+			
+			ps.setInt(1,reply.getP_idx());
+			ps.setString(2, reply.getR_date());
+			ps.setString(3, reply.getR_writer());
+			ps.setString(4, reply.getR_memo());
+			int row = ps.executeUpdate();
+		
+			
+			System.out.println("ROW:"+row +"sql:"+ps.toString());
+
+			if(row>0) {
+				result = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("SQL Error: insertReply()");
+		}finally {
+			 if(ps !=null) {		ps.close();		}
+			// if(conn != null) {	conn.close();	 }
+		}
+		
+		return result;
+		
+	}
+	
+	
+	//공지사항 전체보기
+
+	public List<Notice> NoticeAll() throws SQLException {
+		//boolean result =false;
+		String sql = "select * FROM  notice order by n_Date desc " ;
+		PreparedStatement ps =null;
+		ResultSet rs =null;
+		List<Notice> list = new ArrayList<Notice>();
+		//System.out.println("args:"+ idx);
+		System.out.println("sql:"+sql);
+		
+		try {
+			ps =  conn.prepareStatement(sql);
+			//ps.setInt(1, Integer.parseInt(idx));
+		
+			rs = ps.executeQuery();
+								
+			if(rs.next()) {
+				Notice notice  =new Notice();
+				notice.setN_idx(rs.getInt("n_Idx"));
+				notice.setN_notice(rs.getString("n_Notice"));
+				notice.setN_date(rs.getString("n_Date"));
+				notice.setN_writer(rs.getString("n_Writer"));
+				list.add(notice);
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("SQL Error: NoticeOne()");
+		}finally {
+			 if(ps !=null)
+				 ps.close();
+			if(rs !=null) 
+				rs.close();
+			
+			 //if(conn != null)  conn.close();	 
+		}
+		
+		return list;
+		
+	}
+	
+	
+	//공지사항 하나의글 보기
+
+			public List<Notice> NoticeOne(int idx) throws SQLException {
+				//boolean result =false;
+				String sql = "select * FROM  notice where n_Idx=? " ;
+				PreparedStatement ps =null;
+				ResultSet rs =null;
+				List<Notice> list = new ArrayList<Notice>();
+				//System.out.println("args:"+ idx);
+				System.out.println("sql:"+sql);
+				
+				try {
+					ps =  conn.prepareStatement(sql);
+					ps.setInt(1, idx);
+				
+					rs = ps.executeQuery();
+										
+					if(rs.next()) {
+						Notice notice  =new Notice();
+						notice.setN_idx(rs.getInt("n_Idx"));
+						notice.setN_notice(rs.getString("n_Notice"));
+						notice.setN_date(rs.getString("n_Date"));
+						notice.setN_writer(rs.getString("n_Writer"));
+						list.add(notice);
+					}
+					
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+					System.out.println("SQL Error: NoticeOne()");
+				}finally {
+					 if(ps !=null)
+						 ps.close();
+					if(rs !=null) 
+						rs.close();
+					
+					 //if(conn != null)  conn.close();	 
+				}
+				
+				return list;
+				
+			}
+			
+	
+			
+		
 	
 	//업체 리스트 
 
@@ -389,6 +630,7 @@ public class MemberDao {
 		PreparedStatement ps =null;
 		ResultSet rs =null;
 		List<Partner> list = new ArrayList<Partner>();
+		System.out.println("args:"+ category);
 		System.out.println("sql:"+sql);
 		
 		try {

@@ -19,6 +19,7 @@ request.setCharacterEncoding("EUC-KR");
 
 String user_email = request.getParameter("EMAIL");
 String user_password = request.getParameter("PASSWORD");
+
 RequestDispatcher dispatcher;
 
 
@@ -47,13 +48,14 @@ RequestDispatcher dispatcher;
 		session.setAttribute("MOBILE", mobile);
 		session.setAttribute("PASSWORD", password);
 		
-		
 		response.sendRedirect("index.jsp");
+		
 	}else{
 		
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("fail.jsp");
 	}
 		//result = true;
+
 
 	/*
 	if(result){
@@ -65,16 +67,9 @@ RequestDispatcher dispatcher;
 	}
 */
 
-
 %>
-<%=list.size() %>
-<%=m_idx %>
-<%=user_email %>
-<%= user_password%><br>
+>
 
-<%=email %>
-<%=nickName %>
-<%= memberType%>
 
 </body>
 </html>

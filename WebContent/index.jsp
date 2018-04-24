@@ -246,7 +246,7 @@ padding-right:100px;
 #mainbody{
 width:800px; margin:0 auto;
 height:400px;
-background: #AFB0B1;
+background: #FFFFFF;
  
 }
 
@@ -265,6 +265,7 @@ body{
 	String email = (String)session.getAttribute("EMAIL");
 	String password = (String)session.getAttribute("PASSWORD");
 	String nickname = (String)session.getAttribute("NICKNAME");
+	String meber_type = (String)session.getAttribute("MEMBER_TYPE");
 			nickname +="님! 반갑습니다.";
 %>
 <%//=p_category %>
@@ -328,6 +329,9 @@ body{
 				
 				<li>
 					<a href='#'>고객센터</a>
+					<ul>
+						<li class='sub'><a href='index.jsp?cate=100'>공지사항</a></li>
+					</ul>
 				</li>
 
 			</ul>
@@ -345,13 +349,18 @@ body{
 
 		*/
 		
-		String cate = request.getParameter("cate"); //카테고리 구분값.
+		String cate = request.getParameter("cate"); //메뉴 카테고리 구분값.
 		
 		
 		%>
 		
 		<%if(cate == null){%>
 			 <%@ include file="main_body.jsp" %>
+		<%}else if(cate.equals("100")){%>
+			<jsp:include page="notice.jsp" flush="false"> 
+	  			<jsp:param name="cate" value="<%=cate %>"/>
+	  		</jsp:include>		
+		
 		<%}else{ %>
 			<jsp:include page="partner.jsp" flush="false"> 
 	  			<jsp:param name="cate" value="<%=cate %>"/>
