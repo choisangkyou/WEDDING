@@ -204,8 +204,9 @@ List<Notice> list = MemberDao.getInstance().NoticeOne(Integer.parseInt(p_idx)); 
 			
 			%>
 			<tr>
-				<td colspan="4" >  <input type=hidden name="n_idx" value="<%=p_idx%>" >
-				<input type=text name="reply" value="<%=re.get(i).getR_memo() %>"  size="60">
+				<td colspan="4" >Re:
+					<input type=hidden name="n_idx" value="<%=p_idx%>" >
+					<input type=text name="reply" value="<%=re.get(i).getR_memo() %>"  size="60">
 					<input type="submit"  onClick="location.href='modifyreply.jsp?n_idx=<%=re.get(i).getR_idx()%>'" value="수정" class="submit">
 				</td>		
 			</tr>
@@ -214,9 +215,10 @@ List<Notice> list = MemberDao.getInstance().NoticeOne(Integer.parseInt(p_idx)); 
 	} %>
 	<form action="appendreply.jsp" method="POST">
 	<tr>
-		<td colspan="4" >  <input type=hidden name="n_writer" value="<%=r_writer%>" >
-		<input type=text name="reply" value=""  size="60">
-		<input type=hidden name="n_idx" value="<%=list.get(0).getN_idx() %>"  size="60">
+		<td colspan="4" >Re:  
+			<input type=hidden name="n_writer" value="<%=r_writer%>" >
+			<input type=text name="reply" value=""  size="60">
+			<input type=hidden name="n_idx" value="<%=list.get(0).getN_idx() %>"  size="60">
 			<input type="submit"  value="입력" class="submit">
 		</td>		
 	</tr>
