@@ -142,45 +142,51 @@ table tr:hover td{
 %>
 <%
 request.setCharacterEncoding("EUC-KR"); 
-String cate = request.getParameter("cate"); //카테고리 구분값.
-String email = (String)session.getAttribute("EMAIL");
+String cate = request.getParameter("cate");
+String idx = request.getParameter("n_idx"); //수정하기.
+//String writer = request.getParameter("writer");
 
-List<Notice> notice = MemberDao.getInstance().NoticeAll();
+Notice notice = new Notice();
+List<Notice> list = MemberDao.getInstance().NoticeOne(Integer.parseInt(idx));
+
 
 %>
-<%=cate%>
-<%=notice.size() %>
 
-<form action ="replyform.jsp" method="POST">
+<%//=list.size() %>
+<%//=idx%>
+<%//=writer%><!-- 로그인 체크 -->
+
 <table cellspacing='0'>
 	<tr>
 		<th>index</th>
 		<th>날짜</th>
 		<th>내용</th>
 		<th>글쓴이</th>
-		<th>댓글</th>
 
 	</tr>
-    <%if (notice.size() > 0){ 
-    	for(int i =0; i<notice.size(); i++){%>
+    <%if (list.size() > 0){ %>
 	<tr>
-		<td>
-			<a href="noticeform.jsp?n_idx=<%=notice.get(i).getN_idx()%>" ><%=notice.get(i).getN_idx()%></a>
-		</td>
-		<td><%=notice.get(i).getN_date()%></td>
-		<td><%=notice.get(i).getN_notice()%></td>
-		<td><%=notice.get(i).getN_writer()%></td>
-		<td>
-		 <input type="hidden" name="idx" value="<%=notice.get(i).getN_idx()%>">
-		 <input type="hidden" name="writer" value="<%=email%>">
-		<input type="submit"  value="댓글" class="submit"></td>	
+		<td><%=list.get(0).getN_idx()%></td>
+		<td><%=list.get(0).getN_date()%></td>
+		<td><%=list.get(0).getN_notice() %></td>
+		<td><%=list.get(0).getN_writer() %></td>
+				
 	</tr>
-	<%	}
-    } %>
+	<%} %>
+	<form action="noticemodify.jsp" mehtod="POST">
+	<tr>
+		<td colspan="4" >
+		<input type=text name="notice" value=""  size="60">
+		<input type=hidden name="n_idx" value="<%=list.get(0).getN_idx()%>"  size="60">
 	
+			<input type="submit"   value="수정" class="submit">
+		</td>		
+	</tr>
+	</form>
+
 	
 </table>
-</form>
+
 
 </body>
 </html>

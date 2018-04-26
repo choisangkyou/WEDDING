@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 import java.util.List;
 
+import com.mysql.jdbc.Statement;
+
 
 
 public class MemberDao {
@@ -27,7 +29,7 @@ public class MemberDao {
 	String driverName ="com.mysql.jdbc.Driver";
 	//String url ="jdbc:mysql://localhost:3306/wowwedding";
 	String url = "jdbc:mysql://127.0.0.1:3306/wowwedding?useSSL=true&verifyServerCertificate=false";//SSL 에러발생시..
-	
+	 
 	String user="root";
 	String password ="0000";
 	
@@ -535,19 +537,22 @@ FROM `wowwedding`.`reservation`;
 
 	public List<Notice> NoticeAll() throws SQLException {
 		//boolean result =false;
-		String sql = "select * FROM  notice order by n_Date desc " ;
+		String sql = "select * FROM  notice " ;
 		PreparedStatement ps =null;
+		//Statement st =null;
 		ResultSet rs =null;
 		List<Notice> list = new ArrayList<Notice>();
-		//System.out.println("args:"+ idx);
+		
 		System.out.println("sql:"+sql);
 		
 		try {
 			ps =  conn.prepareStatement(sql);
+			
 			//ps.setInt(1, Integer.parseInt(idx));
 		
 			rs = ps.executeQuery();
-								
+			int i=0;	
+			rs.beforeFirst();
 			if(rs.next()) {
 				Notice notice  =new Notice();
 				notice.setN_idx(rs.getInt("n_Idx"));
@@ -555,6 +560,7 @@ FROM `wowwedding`.`reservation`;
 				notice.setN_date(rs.getString("n_Date"));
 				notice.setN_writer(rs.getString("n_Writer"));
 				list.add(notice);
+				System.out.println("count:"+ i++);
 			}
 			
 			
@@ -573,6 +579,54 @@ FROM `wowwedding`.`reservation`;
 		return list;
 		
 	}
+	
+	
+
+	//공지사항 글수정(업데이트)
+
+	public boolean NoticeModify(Notice notice) throws SQLException {
+		boolean result =false;
+		
+		String sql = "update notice ";
+		   sql += " set n_Notice= ? ,n_Date=?";
+		   sql += "	where n_Idx=?";
+		   
+		PreparedStatement ps =null;
+		ResultSet rs =null;
+		//List<Notice> list = new ArrayList<Notice>();
+		//System.out.println("args:"+ idx);
+		System.out.println("sql:"+sql);
+		
+		try {
+			ps =  conn.prepareStatement(sql);
+			
+			ps.setString(1,notice.getN_notice());
+			ps.setString(2, notice.getN_date());
+			ps.setInt(3, notice.getN_idx());
+					
+			int row = ps.executeUpdate();//ps.executeQuery();
+								
+			if(row>0) {
+				result = true;
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("SQL Error: Notice Update Error()");
+		}finally {
+			 if(ps !=null)
+				 ps.close();
+			if(rs !=null) 
+				rs.close();
+			
+			 //if(conn != null)  conn.close();	 
+		}
+		
+		return result;
+		
+	}
+	
 	
 	
 	//공지사항 하나의글 보기
