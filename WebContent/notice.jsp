@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <%@ page import="modal.Notice" %>
@@ -148,33 +147,35 @@ String email = (String)session.getAttribute("EMAIL");
 List<Notice> notice = MemberDao.getInstance().NoticeAll();
 
 %>
-<%=cate%>
-<%=notice.size() %>
+<%//=cate%>
+<%//=notice.size() %>
 
-<form action ="replyform.jsp" method="POST">
+
 <table cellspacing='0'>
 	<tr>
 		<th>index</th>
 		<th>날짜</th>
-		<th>내용</th>
+		<th width="400">내용</th>
 		<th>글쓴이</th>
 		<th>댓글</th>
 
 	</tr>
     <%if (notice.size() > 0){ 
     	for(int i =0; i<notice.size(); i++){%>
+    <form action ="replyform.jsp" method="POST">
 	<tr>
 		<td>
-			<a href="noticeform.jsp?n_idx=<%=notice.get(i).getN_idx()%>" ><%=notice.get(i).getN_idx()%></a>
+			<a href="noticeform.jsp?n_idx=<%=notice.get(i).getN_idx()%>" ><%=notice.get(i).getN_idx()%></a><!-- 원문 수정 -->
 		</td>
 		<td><%=notice.get(i).getN_date()%></td>
-		<td><%=notice.get(i).getN_notice()%></td>
+		<td width="400"><%=notice.get(i).getN_notice()%></td>
 		<td><%=notice.get(i).getN_writer()%></td>
 		<td>
 		 <input type="hidden" name="idx" value="<%=notice.get(i).getN_idx()%>">
 		 <input type="hidden" name="writer" value="<%=email%>">
 		<input type="submit"  value="댓글" class="submit"></td>	
 	</tr>
+	</form>
 	<%	}
     } %>
 	

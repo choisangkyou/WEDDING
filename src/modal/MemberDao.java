@@ -551,16 +551,15 @@ FROM `wowwedding`.`reservation`;
 			//ps.setInt(1, Integer.parseInt(idx));
 		
 			rs = ps.executeQuery();
-			int i=0;	
-			rs.beforeFirst();
-			if(rs.next()) {
+
+			while(rs.next()) {
 				Notice notice  =new Notice();
 				notice.setN_idx(rs.getInt("n_Idx"));
 				notice.setN_notice(rs.getString("n_Notice"));
 				notice.setN_date(rs.getString("n_Date"));
 				notice.setN_writer(rs.getString("n_Writer"));
 				list.add(notice);
-				System.out.println("count:"+ i++);
+				
 			}
 			
 			
@@ -580,7 +579,51 @@ FROM `wowwedding`.`reservation`;
 		
 	}
 	
-	
+	//댓글 수정(업데이트)
+
+		public boolean ReplyModify(Reply reply) throws SQLException {
+			boolean result =false;
+			
+			String sql = "update reply ";
+			   sql += " set r_memo= ? ,r_date=?";
+			   sql += "	where r_idx=?";
+			   
+			PreparedStatement ps =null;
+			ResultSet rs =null;
+			//List<Notice> list = new ArrayList<Notice>();
+			//System.out.println("args:"+ idx);
+			System.out.println("sql:"+sql);
+			
+			try {
+				ps =  conn.prepareStatement(sql);
+				
+				ps.setString(1,reply.getR_memo());
+				ps.setString(2, reply.getR_date());
+				ps.setInt(3, reply.getR_idx());
+						
+				int row = ps.executeUpdate();//ps.executeQuery();
+									
+				if(row>0) {
+					result = true;
+				}
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("SQL Error: Reply Update Error()");
+			}finally {
+				 if(ps !=null)
+					 ps.close();
+				if(rs !=null) 
+					rs.close();
+				
+				 //if(conn != null)  conn.close();	 
+			}
+			
+			return result;
+			
+		}
+		
 
 	//공지사항 글수정(업데이트)
 
@@ -680,7 +723,12 @@ FROM `wowwedding`.`reservation`;
 
 	public List<Partner> PartnerAll(String category) throws SQLException {
 		//boolean result =false;
-		String sql = "select * FROM  partner where p_Category =?" ;
+		String sql=null;
+		if(category.equals("all"))
+			sql = "select * FROM  partner" ;
+		else
+			sql = "select * FROM  partner where p_Category =?" ;
+		
 		PreparedStatement ps =null;
 		ResultSet rs =null;
 		List<Partner> list = new ArrayList<Partner>();
@@ -689,10 +737,12 @@ FROM `wowwedding`.`reservation`;
 		
 		try {
 			ps =  conn.prepareStatement(sql);
-			ps.setString(1, category);
+			if(!category.equals("all"))
+				ps.setString(1, category);
+			
 		
 			rs = ps.executeQuery();
-			if(rs.next()) {
+			while(rs.next()) {
 				Partner partner  =new Partner();
 				partner.setP_Idx(rs.getInt(1));
 				partner.setM_Idx(rs.getInt(2));

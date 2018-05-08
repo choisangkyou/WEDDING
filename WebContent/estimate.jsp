@@ -1,22 +1,16 @@
 
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
-<%@ page import="modal.Reply" %>
-<%@ page import="modal.Notice" %>
+<%@ page import="modal.Partner" %>
 <%@ page import="modal.MemberDao" %>
-<%@ page import ="java.util.List" %>
-<%@ page import="java.text.SimpleDateFormat"%>
-<%@ page import="java.util.Date"%>
-
-  
+<%@ page import ="java.util.List" %>  
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>공지사항</title>
-<link rel="stylesheet" type="text/css" href="common.css">
-
+<title>와우 웨딩</title>
+<script src="http://code.jquery.com/jquery-1.4.4.js"></script>
 
 <style type="text/css">
 body{
@@ -141,102 +135,104 @@ table tr:hover td{
 </style>
 
 </head>
+<script>
+// 예약폼 체크 함수
+function check() {
+	var arr_pids = new Array();
+	var arr_mids = new Array();
+	var arr_prices = new Array();
+	var arr_svcdates = new Array();
+	var j=0;
+$('input:checkbox[name="partner"]').each(function() {
+	
+   // this.checked = true; //checked 처리
 
+    if(this.checked){//checked 처리된 항목의 값
+    	arr_pids[j] = this.value;
+    	arr_mids[j] =  document.frm.midx[j].value;
+    	arr_prices[j] =  document.frm.r_price[j].value;// $("input[name='r_price']")[j].value;
+    	arr_svcdates[j] = $("input[name='r_servicedate']")[j].value; //$("#r_servicedate").get(j).value;//document.frm.r_servicedate[j].value;
+    	 j++;
+
+    }
+
+});
+
+	
+	if(arr_pids.length > 0){
+		document.frm.arr_pidxs.value = arr_pids; //pidx
+		document.frm.arr_midxs.value = arr_mids; //midx
+		document.frm.arr_prices.value = arr_prices; //배열값 저장,
+		document.frm.arr_svcdates.value = arr_svcdates; //배열값 저장,
+		document.frm.submit();
+	}else{
+		alert('예약할 업체를 체크 하세요.');
+	}
+
+}
+
+
+
+</script>
 <body>
-<jsp:include page="menu.jsp" flush="false"> 
-	  <jsp:param name="etc" value="etc"/>
-</jsp:include>
-
 <%
 //String cate = request.getParameter("cate"); //카테고리 구분값.
 %>
 <%
-String cate = request.getParameter("cate");
-String p_idx = request.getParameter("n_idx");// 댓글 parent index 
-String r_memo = request.getParameter("reply"); //댓글
-String r_writer = request.getParameter("n_writer"); //글쓴이(=email)
+String cate = request.getParameter("cate"); //카테고리 구분값.
 
-
-long time = System.currentTimeMillis(); 
-SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-String r_date = dayTime.format(new Date(time));
-
-
-Reply reply = new Reply();
-reply.setP_idx(Integer.parseInt(p_idx));
-reply.setR_date(r_date);
-reply.setR_writer(r_writer);
-reply.setR_memo(r_memo);
-
-boolean result=false;
-if(MemberDao.getInstance().insertReply(reply)){  //댓글 입력
-/* 	session.setAttribute("EMAIL", user_email);
-	session.setAttribute("PASSWORD",user_password);
-	session.setAttribute("NICKNAME",user_nickname);
-	session.setAttribute("MEMBER_TYPE",user_type);//[0]신랑,[1]신부,[2]업체 */
-	result = true;
-}
-
-
-List<Notice> list = MemberDao.getInstance().NoticeOne(Integer.parseInt(p_idx)); //원글
-
+Partner partner = new Partner();
+List<Partner> list = MemberDao.getInstance().PartnerAll("all");//모든 업체 리스트
 
 %>
+<%//=cate%>
 <%//=list.size() %>
-<%//=p_idx%>
-<%//=r_writer%>
-
+<form action="resv_ArrProcess.jsp" method="POST" name="frm" id="frm">
 <table cellspacing='0'>
 	<tr>
-		<th>index</th>
-		<th>날짜</th>
-		<th>내용</th>
-		<th>글쓴이</th>
-
+		<th>업체명</th>
+		<th>전화번호</th>
+		<th>소개</th>
+		<th>가격</th>
+		<th>예약(서비스일자)</th>
 	</tr>
-    <%if (list.size() > 0){ %>
+    <%if (list.size()>0){ 
+    	for(int i =0; i<list.size(); i++){%>
 	<tr>
-		<td><%=list.get(0).getN_idx()%></td>
-		<td><%=list.get(0).getN_date()%></td>
-		<td width="400"><%=list.get(0).getN_notice() %></td>
-		<td><%=list.get(0).getN_writer() %></td>
-				
+		<td><input type="checkbox" id="partner" name="partner" value="<%=list.get(i).getP_Idx()%>"/><%=list.get(i).getName() %></td>
+		<td><%=list.get(i).getPhone() %></td>
+		<td><img src="images/<%=list.get(i).getPhoto1()%>" width="400"/><br><%=list.get(i).getIntroduce() %></td>
+		<td><input type="hidden" id="r_price" name="r_price" value="<%=list.get(i).getPrice()%>"/><%=list.get(i).getPrice() %></td>
+		<td width="100">
+		※서비스 받고자하는 날짜를 아래 처럼 입력하세요.<br>
+		예)2018-04-12 14:00 <br><br><input type="text" name="r_servicedate" id="r_servicedate"/><br><br>
+		
+		  <input type="hidden" name="pidx"  id="pidx"  value="<%=list.get(i).getP_Idx()%>">
+		  <input type="hidden" name="midx"  id="midx" value="<%=list.get(i).getM_Idx()%>">
+		<!--  <input type="submit" value="예약하기" class="submit">-->
+		  
+		  
 	</tr>
-	<%} %>
+	<%	}
+    } %>
+	<tr class='even'>
+		<td colspan="5">
+		<input type="text" name="arr_pidxs" id="arr_pidxs" value=""/>
+		<input type="text" name="arr_midxs" id="arr_midxs" value=""/>
+		<input type="text" name="arr_prices" id="arr_prices" value=""/>
+		<input type="text" name="arr_svcdates" id="arr_svcdates" value=""/>
+		
+		<input type="button" onClick="check();" value="예약하기"/>
+		
+		
+		</td>
+		
+	</tr>
 	
-	<%
-	List<Reply> re = MemberDao.getInstance().ReplyAll(Integer.parseInt(p_idx));
-	if (re.size() > 0){	
-		for(int i=0; i< re.size(); i++){
-			
-			%>
-			<form action="replymodify.jsp" method="POST">
-			<tr>
-				<td colspan="4" width="400" >Re:
-					<input type="hidden" name="r_idx" value="<%=re.get(i).getR_idx()%>"/>
-					<input type="hidden" name="p_idx" value="<%=re.get(i).getP_idx()%>"/>
-					<input type="hidden" name="r_writer" value="<%=re.get(i).getR_writer()%>"/>
-					<input type=text name="r_memo" value="<%=re.get(i).getR_memo() %>"  size="80%">
-					<input type="submit"  value="수정" class="submit">
-				</td>		
-			</tr>
-			</form>
-			<%
-		}
-	} %>
-	<form action="appendreply.jsp" method="POST">
-	<tr>
-		<td colspan="4" >Re:  
-			<input type=hidden name="n_writer" value="<%=r_writer%>" >
-			<input type=text name="reply" value=""  size="60">
-			<input type=hidden name="n_idx" value="<%=list.get(0).getN_idx() %>"  size="60">
-			<input type="submit"  value="입력" class="submit">
-		</td>		
-	</tr>
-	</form>
+
 	
 </table>
-
+</form>
 
 </body>
 </html>

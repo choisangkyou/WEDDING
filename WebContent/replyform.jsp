@@ -10,6 +10,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>공지사항</title>
+<link rel="stylesheet" type="text/css" href="common.css">
 
 
 <style type="text/css">
@@ -137,6 +138,11 @@ table tr:hover td{
 </head>
 
 <body>
+
+<jsp:include page="menu.jsp" flush="false"> 
+	  <jsp:param name="etc" value="etc"/>
+</jsp:include>
+
 <%
 //String cate = request.getParameter("cate"); //카테고리 구분값.
 %>
@@ -146,14 +152,14 @@ String idx = request.getParameter("idx");
 String writer = request.getParameter("writer");
 
 Notice notice = new Notice();
-List<Notice> list = MemberDao.getInstance().NoticeAll();
+List<Notice> list = MemberDao.getInstance().NoticeOne(Integer.parseInt(idx));
 
 
 %>
 
-<%=list.size() %>
-<%=idx%>
-<%=writer%><!-- 로그인 체크 -->
+<%//=list.size() %>
+<%//=idx%>
+<%//=writer%><!-- 로그인 체크 -->
 
 <table cellspacing='0'>
 	<tr>
@@ -167,15 +173,15 @@ List<Notice> list = MemberDao.getInstance().NoticeAll();
 	<tr>
 		<td><%=list.get(0).getN_idx()%></td>
 		<td><%=list.get(0).getN_date()%></td>
-		<td><%=list.get(0).getN_notice() %></td>
+		<td width="400"><%=list.get(0).getN_notice() %></td>
 		<td><%=list.get(0).getN_writer() %></td>
 				
 	</tr>
 	<%} %>
 	<form action="appendreply.jsp" mehtod="POST">
 	<tr>
-		<td colspan="4" >
-		<input type=text name="reply" value=""  size="60">
+		<td colspan="4" width="400">
+		<input type=text name="reply" value=""  size="80%">
 		<input type=hidden name="n_idx" value="<%=list.get(0).getN_idx()%>"  size="60">
 		<input type=hidden name="n_writer" value="<%=writer %>"  size="60">
 		

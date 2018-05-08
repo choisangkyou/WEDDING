@@ -1,11 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>와우 웨딩</title>
-<style>
+@charset "EUC-KR";
 
 .menu {
   position: relative;
@@ -251,53 +244,3 @@ background: #FFFFFF;
 }
 
 
-body{
-/*text-align:center;*/
-}
-</style>
-<body>
-<jsp:include page="menu.jsp" flush="false"> 
-	  			<jsp:param name="cate" value=""/>
-</jsp:include>
-	
-		
-		<%
-		/*
-		'001', '장소', '1'
-		'002', '포토', '1'
-		'003', '드레스', '1'
-		'004', '신랑예복', '1'
-		'005', '메이크업', '1'
-		'006', '한복', '1'
-		'007', '사회', '1'
-		'008', '코디', '1'
-
-		*/
-		
-		String cate = request.getParameter("cate"); //메뉴 카테고리 구분값.
-		
-		
-		%>
-		<%if(cate == null){%>
-			 <%@ include file="main_body.jsp" %>
-		<%}else if(cate.equals("about")){//about%>
-			 <%@ include file="about.jsp" %>
-
-		<%}else if(cate.equals("100")){//공지사항%>
-			<jsp:include page="notice.jsp" flush="false"> 
-	  			<jsp:param name="cate" value="<%=cate %>"/>
-	  		</jsp:include>		
-		<%}else if(cate.equals("200")){ //견적%>
-			<jsp:include page="estimate.jsp" flush="false"> 
-	  			<jsp:param name="cate" value="<%=cate %>"/>
-	  		</jsp:include>		
-		
-		<%}else{ //업체(001~003)%>
-			<jsp:include page="partner.jsp" flush="false"> 
-	  			<jsp:param name="cate" value="<%=cate %>"/>
-	  		</jsp:include>
-	  		
-		 	
-		<%} %>
-</body>
-</html>

@@ -147,7 +147,7 @@ Partner partner = new Partner();
 List<Partner> list = MemberDao.getInstance().PartnerAll(cate);
 
 %>
-<%=cate%>
+<%//=cate%>
 <%//=list.size() %>
 <form action="resv_process.jsp" method="POST">
 <table cellspacing='0'>

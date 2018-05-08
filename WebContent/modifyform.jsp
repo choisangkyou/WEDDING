@@ -393,7 +393,7 @@ String member_type = (String)session.getAttribute("MEMBER_TYPE");
 
 
 %>
-<%=m_idx %><br>
+<%//=m_idx %><br>
 <section class="container">
 		    <article class="half">
 			        <h1>와우웨딩</h1>

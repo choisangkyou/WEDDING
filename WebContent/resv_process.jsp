@@ -44,6 +44,11 @@ String r_Date = dayTime.format(new Date(time));
 		if(MemberDao.getInstance().insertReservation(resv)){
 			out.println("========= OK =========");
 			//session.setAttribute("P_CATEGORY", p_category);
+			%>
+			<script>
+			alert('예약완료 되었습니다.');
+			</script>
+			<%
 			response.sendRedirect("index.jsp");
 		}
 	}else{
@@ -57,12 +62,6 @@ String r_Date = dayTime.format(new Date(time));
 	}
 
 %>
-
-
-1:<%=p_Idx %><br>
-2:<%=m_Idx %><br>
-3:<%=r_Date %><br>
-4:<%=r_ServiceDate %><br>
 
 </body>
 </html>
