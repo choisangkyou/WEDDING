@@ -137,9 +137,7 @@ table tr:hover td{
 </head>
 
 <body>
-<%
-//String cate = request.getParameter("cate"); //카테고리 구분값.
-%>
+
 <%
 String cate = request.getParameter("cate"); //카테고리 구분값.
 
@@ -147,8 +145,7 @@ Partner partner = new Partner();
 List<Partner> list = MemberDao.getInstance().PartnerAll(cate);
 
 %>
-<%//=cate%>
-<%//=list.size() %>
+
 <form action="resv_process.jsp" method="POST">
 <table cellspacing='0'>
 	<tr>
@@ -175,14 +172,7 @@ List<Partner> list = MemberDao.getInstance().PartnerAll(cate);
 	</tr>
 	<%	}
     } %>
-	<!-- <tr class='even'>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
-	-->
 
-	
 </table>
 </form>
 
